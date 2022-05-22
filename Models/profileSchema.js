@@ -1,5 +1,6 @@
 const { links } = require('express/lib/response')
 const mongoose = require('mongoose')
+const mongoose = require('../db/connection')
 
 
 const ProfileSchema = new mongoose.Schema({
