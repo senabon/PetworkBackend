@@ -2,7 +2,7 @@ const { links } = require('express/lib/response')
 const mongoose = require('mongoose')
 
 
-const ProfileSchema = new mongoose.Schema({
+const DogFactsSchema = new mongoose.Schema({
     img: String,
     dogName: String, 
     dogBreed: String,
@@ -12,6 +12,6 @@ const ProfileSchema = new mongoose.Schema({
 
 });
 
-const Profile = mongoose.model("profile", ProfileSchema);
+const DogFacts = mongoose.model("dog facts", DogFactsSchema);
 
-module.exports = Profile;
+module.exports = DogFacts;
