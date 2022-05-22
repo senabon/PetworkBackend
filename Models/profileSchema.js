@@ -1,5 +1,5 @@
 const { links } = require('express/lib/response')
-const mongoose = require('mongoose')
+const mongoose = require('../db/connection')
 
 
 const ProfileSchema = new mongoose.Schema({
@@ -12,6 +12,6 @@ const ProfileSchema = new mongoose.Schema({
 
 });
 
-const ProfileSchema = mongoose.model("profile", ProfileSchema)
+const ProfileSchema = mongoose.model("profile", ProfileSchema);
 
 module.exports = ProfileSchema;
