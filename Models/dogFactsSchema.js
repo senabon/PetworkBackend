@@ -3,12 +3,15 @@ const mongoose = require('mongoose')
 
 
 const DogFactsSchema = new mongoose.Schema({
-    img: String,
-    dogName: String, 
-    dogBreed: String,
-    dogBirthday: String,
-    favoriteToy: String,
-    dogDescription: String,
+    name: String,
+    temperament: String,
+    life_span: String,
+    alt_names: String,
+    wikipedia_url: String,
+    origin: String,
+    weight: Object,
+    country_code: String,
+    height: Object
 
 });
 
