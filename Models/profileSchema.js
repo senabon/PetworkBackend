@@ -10,7 +10,8 @@ const ProfileSchema = new mongoose.Schema({
     dogBirthday: String,
     favoriteToy: String,
     dogDescription: String,
-
+    username: String,
+    password: String
 });
 
 const Profile = mongoose.model("profile", ProfileSchema);
