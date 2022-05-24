@@ -7,6 +7,39 @@ router.get('/', (req, res) => {
   res.send('welcome to petwork!')
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //update 
 router.put('/editprofile', async (req, res) => {
   try {
