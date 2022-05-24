@@ -1,6 +1,7 @@
 require('dotenv').config()
 const axios = require('axios');
 const express = require('express')
+const Profile = require('../Models/profileSchema')
 const router = express.Router()
 const Profile = require('../Models/profileSchema')
 
