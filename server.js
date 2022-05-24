@@ -8,6 +8,9 @@ const petworkController = require('./controllers/petworkControllers')
 
 const app = express()
 
+//--- pull PORT from .env for use with Heroku ---//
+const { PORT = 4321, MONGODB_URL } = process.env
+
 
 app.use(cors())
 app.use(morgan('dev'))
