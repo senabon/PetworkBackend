@@ -1,5 +1,6 @@
 const { links } = require('express/lib/response')
 const mongoose = require('../db/connection')
+const bcrypt =require('bcrypt')
 
 
 const ProfileSchema = new mongoose.Schema({
@@ -9,9 +10,24 @@ const ProfileSchema = new mongoose.Schema({
     dogBirthday: String,
     favoriteToy: String,
     dogDescription: String,
-    username: String,
-    password: String
+    username:{ type: String, require: true, unique: true},
+    password: {type: String, required: true}
 });
+
+ProfileSchema.pre('save', function(next){
+    if(TouchList.isNew||this.isModified('password')){
+        const input = this;
+        bcrypt.hash(input.password,
+            function(error, hashedPassword){
+                if(error){
+                    nect(error);
+                }else{
+                    input.password=hashedPassword;
+                    next();
+                }
+            })
+    }
+})
 
 const Profile = mongoose.model("profile", ProfileSchema);
 
