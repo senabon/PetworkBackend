@@ -17,6 +17,16 @@ const fetchDogFacts = () => {
 	}))
 }
 
+const fetchDogDetails = (id) => {
+
+	return(
+  axios.get(`https://api.thedogapi.com/v1/breeds/${id}`, {
+    headers: {'x-api-key': APIkey}
+  })
+	.then(data => {
+		return data
+	}))
+}
 
 //test route
 router.get('/', (req, res) => {
@@ -27,17 +37,17 @@ router.get('/', (req, res) => {
 //Get list of all dog facts
 router.get('/dogfacts', async (req, res) => {
   const data = await fetchDogFacts();
-  console.log(data.data)
   res.send({results: data.data})
 })
 
 //Get information about an individal breed
 router.get('/dogfacts/:id', async (req, res) => {
   const data = await fetchDogFacts();
-  const id = req.params.id - 1
-  console.log(data.data)
-  res.send({results: data.data[id]})
-
+  let result = data.data.filter(dog => {
+    return dog.id == req.params.id
+  })
+  console.log(req.params.id)
+  res.send({result})
 })
 
 
