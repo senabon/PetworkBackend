@@ -49,6 +49,10 @@ router.get('/dogfacts/:id', async (req, res) => {
   })
   console.log(req.params.id)
   res.send({result})
+  const id = req.params.id - 1
+  console.log(data.data)
+  res.send({results: data.data[id]})
+
 })
 
 
