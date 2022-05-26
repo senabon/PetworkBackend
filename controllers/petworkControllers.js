@@ -23,6 +23,7 @@ router.get('/', (req, res) => {
   res.send('Welcome to Petwork!')
 });
 
+
 //Get list of all dog facts
 router.get('/dogfacts', async (req, res) => {
   const data = await fetchDogFacts();
@@ -30,8 +31,18 @@ router.get('/dogfacts', async (req, res) => {
   res.send({results: data.data})
 })
 
+//Get information about an individal breed
+router.get('/dogfacts/:id', async (req, res) => {
+  const data = await fetchDogFacts();
+  const id = req.params.id - 1
+  console.log(data.data)
+  res.send({results: data.data[id]})
+
+})
+
+
 //Get user profile
-router.get('/:id', async(req, res) => {
+router.get('/profile/:id', async(req, res) => {
   try {
     let profileFound = await Profile.find({username: req.params.id})
     res.json(profileFound)
