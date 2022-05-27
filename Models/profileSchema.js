@@ -2,6 +2,7 @@ const { links } = require('express/lib/response')
 const mongoose = require('../db/connection')
 const bcrypt =require('bcrypt')
 
+const saltRounds = 10;
 
 const ProfileSchema = new mongoose.Schema({
     img: String,
@@ -17,7 +18,7 @@ const ProfileSchema = new mongoose.Schema({
 ProfileSchema.pre('save', function(next){
     if(TouchList.isNew||this.isModified('password')){
         const input = this;
-        bcrypt.hash(input.password,
+        bcrypt.hash(input.password, saltRounds,
             function(error, hashedPassword){
                 if(error){
                     nect(error);

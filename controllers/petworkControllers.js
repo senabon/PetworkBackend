@@ -1,6 +1,7 @@
 require('dotenv').config()
 const axios = require('axios');
-const express = require('express')
+const express = require('express');
+const { append } = require('express/lib/response');
 const Profile = require('../Models/profileSchema')
 const router = express.Router()
 
@@ -70,6 +71,17 @@ router.put('/editprofile/:id', async (req,res)=>{
     res.status(400).json(error)
   }
 })
+
+
+//
+
+router.use('/signin', (req,res)=>{
+  res.send({
+    token: 'test4321'
+    
+  })
+})
+
 
 //get signup page 
 router.post('/signup', function(req,res){

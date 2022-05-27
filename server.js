@@ -19,6 +19,7 @@ app.use('/', petworkController)
 
 app.set(process.env.port || 4321)
 
-app.listen(process.env.PORT || 4321, () => {
+
+app.listen(app.get('port'), () => {
   console.log(`PORT: ${app.get('port')}`)
 });
