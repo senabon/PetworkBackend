@@ -75,14 +75,6 @@ router.put('/editprofile/:id', async (req,res)=>{
 
 //
 
-router.use('/signin', (req,res)=>{
-  res.send({
-    token: 'test4321'
-    
-  })
-})
-
-
 //get signup page 
 router.post('/signup', function(req,res){
   const {username, password} = req.body;
