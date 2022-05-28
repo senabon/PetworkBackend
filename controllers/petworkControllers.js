@@ -61,5 +61,30 @@ router.get('/profile/:id', async(req, res) => {
   }
 })
 
+//update 
+router.put('/editprofile/:id', async (req,res)=>{
+  try{
+    let updateProfile = await Profile.find({username: req.params.id}, req.body)
+    res.json(updateProfile)
+  } catch(error){
+    res.status(400).json(error)
+  }
+})
+
+//get signup page 
+router.post('/signup', function(req,res){
+  const {username, password} = req.body;
+  const user = new User({username, password});
+  user.save(function(error) {
+    if(error){
+      res.status(500)
+      .send('There was a problem with registering. Please try again');
+    } else {
+      res.status(200)
+      .send("Welcome to Petwork");
+    }
+  });
+
+});
 
 module.exports = router;
