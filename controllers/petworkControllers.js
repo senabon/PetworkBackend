@@ -5,6 +5,15 @@ const { append } = require('express/lib/response');
 const Profile = require('../Models/profileSchema')
 const router = express.Router()
 
+//for auth
+const usersData = {
+  users: require('../db/seedData.json'),
+  setUsers: function (data) {this.users = data}
+}
+const fsPromises = require('fs'.promises);
+const path = require('path')
+const bcrypt = require('bcrypt')
+
 let APIkey = process.env.PETWORK_APP_DOG_KEY
 
 const fetchDogFacts = () => {
@@ -67,9 +76,9 @@ router.get('/profile/:id', async(req, res) => {
 })
 
 //update 
-router.put('/editprofile/:id', async (req,res)=>{
+router.put('/profile/:id', async (req,res)=>{
   try{
-    let updateProfile = await Profile.find({username: req.params.id}, req.body)
+    let updateProfile = await Profile.findOneAndUpdate({username: req.params.id}, req.body)
     res.json(updateProfile)
   } catch(error){
     res.status(400).json(error)
@@ -77,5 +86,51 @@ router.put('/editprofile/:id', async (req,res)=>{
 })
 
 
+
+
+
+//for signup 
+
+const handleNew = async (req,res)=>{
+  const {user, password} =req.body;
+  if (!user||!password)
+    return res.status.json({'message': 'Username and Password Required'});
+  const alreadyTaken = usersData.users.find( dog => dog.username===user)
+  if(alreadyTaken) return res.sendStatus(409);
+  try{
+    const hashedPassword = await bcrypt.hash(password, 10)//salt rounds ---->encryption
+    const newUser = {"username": user, "password": hashedPassword}
+    usersData.setUsers([...usersData.users, newUser])
+    await fsPromises.writeFile(
+      path.join(__dirname, '..', 'db',"seedData.json"),
+      JSON.stringify(usersData.users)
+    );
+    console.log (usersData.users)
+    res.status.json({'succes':`User ${user} has been created!` })
+  }catch(error){
+    res.status.json({'mesage': error.message})
+  }
+}
+
+router.post('/profile', handleNew)
+
+
+//for signin
+
+const handleSignin = async (req, res)=>{
+  const {user, password} =req.body;
+if (!user||!password)
+  return res.status.json({'message': 'Username and Password Required'});
+  const userFound = usersData.users.find(dog =>dog.username ===user);
+  if(!userFound) return res.sendStatus(401);
+  const matchFound = await bcrypt.compare(password, userFound.password);
+  if (matchFound){
+    res.json({'success':`User ${user} is now logged in`})
+  }else{
+    res.sendStatus(401);
+  }
+}
+
+router.post('/profile', handleSignin)
 
 module.exports = router;
