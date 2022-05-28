@@ -1,6 +1,7 @@
 require('dotenv').config()
 const axios = require('axios');
-const express = require('express')
+const express = require('express');
+const { append } = require('express/lib/response');
 const Profile = require('../Models/profileSchema')
 const router = express.Router()
 
@@ -71,20 +72,6 @@ router.put('/editprofile/:id', async (req,res)=>{
   }
 })
 
-//get signup page 
-router.post('/signup', function(req,res){
-  const {username, password} = req.body;
-  const user = new User({username, password});
-  user.save(function(error) {
-    if(error){
-      res.status(500)
-      .send('There was a problem with registering. Please try again');
-    } else {
-      res.status(200)
-      .send("Welcome to Petwork");
-    }
-  });
 
-});
 
 module.exports = router;
