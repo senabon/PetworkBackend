@@ -27,16 +27,6 @@ const fetchDogFacts = () => {
 	}))
 }
 
-const fetchDogDetails = (id) => {
-
-	return(
-  axios.get(`https://api.thedogapi.com/v1/breeds/${id}`, {
-    headers: {'x-api-key': APIkey}
-  })
-	.then(data => {
-		return data
-	}))
-}
 
 //test route
 router.get('/', (req, res) => {
@@ -128,5 +118,11 @@ if (!user||!password)
 }
 
 router.post('/profile', handleSignin)
+
+//Add breed as a favorite
+// router.post('/dogfacts/:id', async (req, res) => {
+  // if signed in, then change like status attached to profile to like
+  // else, if not signed in, don't allow like 
+// })
 
 module.exports = router;
