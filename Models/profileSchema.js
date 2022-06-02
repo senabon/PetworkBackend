@@ -12,7 +12,8 @@ const ProfileSchema = new mongoose.Schema({
     favoriteToy: String,
     dogDescription: String,
     username:{ type: String, require: true, unique: true},
-    password: {type: String, required: true}
+    password: {type: String, required: true},
+    favorites: Array
 });
 
 
