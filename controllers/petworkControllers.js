@@ -10,7 +10,7 @@ const usersData = {
   users: require('../db/seedData.json'),
   setUsers: function (data) {this.users = data}
 }
-const fsPromises = require('fs'.promises);
+const fsPromises = require("fs").promises;
 const path = require('path')
 const bcrypt = require('bcrypt')
 
@@ -46,10 +46,15 @@ router.get('/dogfacts/:id', async (req, res) => {
   let result = data.data.filter(dog => {
     return dog.id == req.params.id
   })
-  console.log(req.params.id)
   res.send({result})
 })
 
+//Get all user profiles
+router.get('/profile', async(req,res) => {
+  Profile.find({})
+  .then((profiles) => res.send(profiles))
+  .catch(console.error)
+})
 
 //Get user profile
 router.get('/profile/:id', async(req, res) => {
@@ -61,7 +66,7 @@ router.get('/profile/:id', async(req, res) => {
   }
 })
 
-//update 
+//update profile
 router.put('/profile/:id', async (req,res)=>{
   try{
     let updateProfile = await Profile.findOneAndUpdate({username: req.params.id}, req.body)
@@ -71,7 +76,12 @@ router.put('/profile/:id', async (req,res)=>{
   }
 })
 
-
+//update favorite status
+// router.put('/dogfacts/:id/favorite', async (req, res) => {
+//   try{
+//     const userFound = usersData.users.find(dog =>dog.username ===user);
+//   }
+// })
 
 
 
@@ -98,31 +108,30 @@ const handleNew = async (req,res)=>{
   }
 }
 
-router.post('/profile', handleNew)
+router.post('/profile/', handleNew)
 
 
 //for signin
 
 const handleSignin = async (req, res)=>{
   const {user, password} =req.body;
-if (!user||!password)
+if (!user||!password){
   return res.status.json({'message': 'Username and Password Required'});
-  const userFound = usersData.users.find(dog =>dog.username ===user);
-  if(!userFound) return res.sendStatus(401);
+}
+  const userFound = usersData.users.find(dog =>dog.username ===user)
+
+  if(!userFound){ return res.sendStatus(401)}
+
   const matchFound = await bcrypt.compare(password, userFound.password);
+  
   if (matchFound){
     res.json({'success':`User ${user} is now logged in`})
-  }else{
+  } else{
     res.sendStatus(401);
   }
 }
 
-router.post('/profile', handleSignin)
+router.post('/profile/:id', handleSignin)
 
-//Add breed as a favorite
-// router.post('/dogfacts/:id', async (req, res) => {
-  // if signed in, then change like status attached to profile to like
-  // else, if not signed in, don't allow like 
-// })
 
 module.exports = router;
