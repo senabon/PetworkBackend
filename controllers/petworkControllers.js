@@ -51,12 +51,12 @@ router.get('/dogfacts/:id', async (req, res) => {
   res.send({result})
 })
 
-//Get all user profiles
-router.get('/profile', async(req,res) => {
-  Profile.find({})
-  .then((profiles) => res.send(profiles))
-  .catch(console.error)
-})
+// //Get all user profiles
+// router.get('/profile', async(req,res) => {
+//   Profile.find({})
+//   .then((profiles) => res.send(profiles))
+//   .catch(console.error)
+// })
 
 //Get user profile
 router.get('/profile/:id', async(req, res) => {
