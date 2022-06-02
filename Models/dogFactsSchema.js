@@ -11,8 +11,7 @@ const DogFactsSchema = new mongoose.Schema({
     origin: String,
     weight: Object,
     country_code: String,
-    height: Object
-
+    height: Object,
 });
 
 const DogFacts = mongoose.model("dog facts", DogFactsSchema);
