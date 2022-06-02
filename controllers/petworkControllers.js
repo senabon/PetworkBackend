@@ -32,7 +32,7 @@ const fetchDogFacts = () => {
 
 //test route
 router.get('/', (req, res) => {
-  res.send('Welcome to Petwork!')
+ res.send(usersData.users[0].favorites) 
 });
 
 
@@ -43,19 +43,19 @@ router.get('/dogfacts', async (req, res) => {
 })
 
 //Get information about an individal breed
+
 router.get('/dogfacts/:id', async (req, res) => {
   const data = await fetchDogFacts();
   let result = data.data.filter(dog => {
     return dog.id == req.params.id
   })
-  res.send({result})
+  res.send({result, likeStatus: usersData.users[0].favorites.includes(req.params.id)})
 })
 
-//Get all user profiles
-router.get('/profile', async(req,res) => {
-  Profile.find({})
-  .then((profiles) => res.send(profiles))
-  .catch(console.error)
+//Get favorited breeds
+router.get('/favorites', async (req, res) => {
+  const favorites = usersData.users[0].favorites
+  res.send({favorites})
 })
 
 //Get user profile
@@ -79,13 +79,16 @@ router.put('/profile/:id', async (req,res)=>{
 })
 
 //update favorite status
-// router.put('/dogfacts/:id/favorite', async (req, res) => {
-//   try{
-//     const userFound = usersData.users.find(dog =>dog.username ===user);
-//   }
-// })
-
-
+router.post('/dogfacts/:id', (req, res) => {
+  const id=req.params.id
+  if(!usersData.users[0].favorites.includes(id)){
+    usersData.users[0].favorites.push(req.params.id)
+    res.json({likeStatus: true})
+  } else {
+    usersData.users[0].favorites.splice(usersData.users[0].favorites.indexOf(id), 1)
+    res.json({likeStatus: false})
+  }
+})
 
 //for signup 
 
