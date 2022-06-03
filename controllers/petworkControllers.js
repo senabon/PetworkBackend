@@ -30,10 +30,14 @@ const fetchDogFacts = () => {
 }
 
 
-//test route
-router.get('/', (req, res) => {
- res.send(usersData.users[0].favorites) 
-});
+//CORS route
+router.get("/", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" ); 
+   });
 
 
 //Get list of all dog facts
@@ -121,7 +125,7 @@ router.post('/profile/', handleNew)
 const handleSignin = async (req, res)=>{
   const {user, password} =req.body;
 if (!user||!password){
-  return res.status.json({'message': 'Username and Password Required'});
+  return res.json({'message': 'Username and Password Required'});
 }
   const userFound = usersData.users.find(dog =>dog.username ===user)
 
@@ -137,6 +141,7 @@ if (!user||!password){
 }
 
 router.post('/profile/:id', handleSignin)
+
 
 
 module.exports = router;
