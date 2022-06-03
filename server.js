@@ -13,7 +13,12 @@ app.use(express.urlencoded({extended:false}))
 // const { PORT = 4321, MONGODB_URL } = process.env.port
 
 
-app.use(cors())
+const corsOptions ={
+  origin:'http://localhost:3000', 
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 app.use(morgan('dev'))
 app.use(express.json())
 app.use('/', petworkController)
