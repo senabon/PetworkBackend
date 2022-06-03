@@ -14,7 +14,7 @@ app.use(express.urlencoded({extended:false}))
 
 
 const corsOptions ={
-  origin:'https://senabon.github.io/', 
+  origin:'https://senabon.github.io/petworkfrontend', 
   credentials:true,            //access-control-allow-credentials:true
   optionSuccessStatus:200
 }
