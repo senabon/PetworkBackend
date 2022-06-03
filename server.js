@@ -9,13 +9,9 @@ const petworkController = require('./controllers/petworkControllers')
 const app = express()
 app.use(express.urlencoded({extended:false}))
 
-//--- pull PORT from .env for use with Heroku ---//
-// const { PORT = 4321, MONGODB_URL } = process.env.port
-
-
 const corsOptions ={
-  origin:'https://senabon.github.io/petworkfrontend', 
-  credentials:true,            //access-control-allow-credentials:true
+  origin:'http://localhost:3000', 
+  credentials:true,           
   optionSuccessStatus:200
 }
 app.use(cors(corsOptions));
