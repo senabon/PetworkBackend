@@ -10,6 +10,8 @@ const bcrypt = require('bcrypt')
 
 let APIkey = process.env.PETWORK_APP_DOG_KEY
 
+const favorites =[]
+
 const generateToken = (id) => {
   return jwt.sign({id}, process.env.JWT_SECRET, {
     expiresIn: "30d",
@@ -52,12 +54,11 @@ router.get('/dogfacts/:id', async (req, res) => {
   let result = data.data.filter(dog => {
     return dog.id == req.params.id
   })
-  res.send({result})
+  res.send({result, likeStatus: favorites.includes(req.params.id)})
 })
 
 //Get favorited breeds
 router.get('/favorites', async (req, res) => {
-  const favorites = usersData.users[0].favorites
   res.send({favorites})
 })
 
@@ -70,13 +71,31 @@ router.get('/profile/:id', (req, res) => {
 //update favorite status
 router.post('/dogfacts/:id', (req, res) => {
   const id=req.params.id
-  if(!usersData.users[0].favorites.includes(id)){
-    usersData.users[0].favorites.push(req.params.id)
+  if (!favorites.includes(id)){
+    favorites.push(req.params.id)
     res.json({likeStatus: true})
   } else {
-    usersData.users[0].favorites.splice(usersData.users[0].favorites.indexOf(id), 1)
+    favorites.splice(favorites.indexOf(id), 1)
     res.json({likeStatus: false})
   }
+
+  // Profile.findOne({username})
+  // .then(user => {
+  //   if (!user.favorites.includes(id)){
+  //     user.favorites.push(req.params.id)
+  //     res.json({likeStatus: true})
+  //   } else {
+  //     user.favorites.splie(user.favorites.indexOf(id), 1)
+  //     res.json({likeStatus: false})
+  //   }
+  // })
+  // if(!usersData.users[0].favorites.includes(id)){
+  //   usersData.users[0].favorites.push(req.params.id)
+  //   res.json({likeStatus: true})
+  // } else {
+  //   usersData.users[0].favorites.splice(usersData.users[0].favorites.indexOf(id), 1)
+  //   res.json({likeStatus: false})
+  // }
 })
 
 
@@ -98,6 +117,7 @@ const registerUser = async (req, res) => {
     dogBirthday, 
     favoriteToy, 
     dogDescription,
+    favorites,
   })
 
   if(user){
@@ -109,6 +129,7 @@ const registerUser = async (req, res) => {
       dogBirthday: user.dogBirthday,
       favoriteToy: user.favoriteToy,
       dogDescription: user.dogDescription,
+      favorites: user.favorites,
       token: generateToken(user._id)
     })
   } else {
@@ -138,7 +159,7 @@ const authUser = async (req, res) => {
       favoriteToy: user.favoriteToy,
       dogDescription: user.dogDescription,
       token: generateToken(user._id)
-    })
+    }) 
   } else {
     res.status(400);
     throw new Error("Invalid User or Password")
