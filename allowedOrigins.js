@@ -1,6 +1,5 @@
 const allowedOrigins = [
-  'http://localhost:3000/',
-  'https://senabon.github.io/'
+  'https://senabon.github.io/petworkfrontend'
 ];
 
 module.exports = allowedOrigins;

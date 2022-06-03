@@ -14,7 +14,7 @@ app.use(express.urlencoded({extended:false}))
 
 
 const corsOptions ={
-  origin:'http://localhost:3000', 
+  origin:'https://senabon.github.io/petworkfrontend', 
   credentials:true,            //access-control-allow-credentials:true
   optionSuccessStatus:200
 }
