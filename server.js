@@ -10,7 +10,7 @@ const app = express()
 app.use(express.urlencoded({extended:false}))
 
 const corsOptions ={
-  origin:'http://localhost:3000', 
+  origin:'https://629ab49c6e0c1b12c11c14b2--cheery-salmiakki-f8289b.netlify.app/', 
   credentials:true,           
   optionSuccessStatus:200
 }
