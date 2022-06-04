@@ -124,13 +124,13 @@ const registerUser = asyncHandler(async (req, res) => {
 router.post('/profile', registerUser);
 
 
-const authUser = async (req, res) => {
+const authUser = asyncHandler(async (req, res) => {
   const {username, password} = req.body;
 
   const user = await Profile.findOne({username})
 
   if(user && (await user.matchPassword(password))){
-    res.send({
+    res.json({
       _id: user._id,
       username: user.username,
       dogName: user.dogName,
@@ -145,7 +145,7 @@ const authUser = async (req, res) => {
     throw new Error("Invalid User or Password")
   }
   return;
-}
+})
 
 router.post('/profile/:id', authUser);
 
