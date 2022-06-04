@@ -1,5 +1,5 @@
 const allowedOrigins = [
-  'https://senabon.github.io/petworkfrontend'
+  'https://cheery-salmiakki-f8289b.netlify.app/'
 ];
 
 module.exports = allowedOrigins;
