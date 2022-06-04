@@ -78,24 +78,6 @@ router.post('/dogfacts/:id', (req, res) => {
     favorites.splice(favorites.indexOf(id), 1)
     res.json({likeStatus: false})
   }
-
-  // Profile.findOne({username})
-  // .then(user => {
-  //   if (!user.favorites.includes(id)){
-  //     user.favorites.push(req.params.id)
-  //     res.json({likeStatus: true})
-  //   } else {
-  //     user.favorites.splie(user.favorites.indexOf(id), 1)
-  //     res.json({likeStatus: false})
-  //   }
-  // })
-  // if(!usersData.users[0].favorites.includes(id)){
-  //   usersData.users[0].favorites.push(req.params.id)
-  //   res.json({likeStatus: true})
-  // } else {
-  //   usersData.users[0].favorites.splice(usersData.users[0].favorites.indexOf(id), 1)
-  //   res.json({likeStatus: false})
-  // }
 })
 
 
