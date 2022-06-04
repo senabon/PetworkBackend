@@ -2,6 +2,7 @@ require('dotenv').config()
 const axios = require('axios');
 const express = require('express');
 const jwt = require('jsonwebtoken')
+const asyncHandler = require('express-async-handler')
 const Profile = require('../Models/profileSchema')
 const router = express.Router()
 
@@ -79,7 +80,7 @@ router.post('/dogfacts/:id', (req, res) => {
 })
 
 
-const registerUser = async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   const {username, password, dogName, dogBreed, dogBirthday, favoriteToy, dogDescription} = req.body;
 
   const userExists = await Profile.findOne({ username })
@@ -118,7 +119,7 @@ const registerUser = async (req, res) => {
     throw new Error("Error Occured")
   }
   return
-}
+})
 
 router.post('/profile', registerUser);
 
