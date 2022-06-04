@@ -5,7 +5,7 @@ ___________________
 This is the backend of a pet (dog) parent networking app, where users can create profiles to share information about their dogs, look up basic information about different dog breeds, and "love" (like) their favorite breeds to save for later!
 
 ### Link to Deployed API
-Live version deployed to [heroku](petwork-backend.herokuapp.com)
+Live version deployed to [heroku](https://petwork-backend.herokuapp.com)
 
 ### Technologies Used
 Express.js, Node.js, MongoDB, Mongoose, The Dog API
