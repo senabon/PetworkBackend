@@ -150,7 +150,17 @@ const authUser = async (req, res) => {
 
 router.post('/profile/:id', authUser);
 
+//-- delete existing user --//
+router.delete('/:id', (req, res) => {
+  //-- check if route is accessed --//
+  console.log('delete route has been reached!')
 
+  Profile.findOneAndRemove(
+    {_id: req.params.id},
+  )
+  .then( () => res.redirect('/'))
+  .catch(err => res.send(err))
+})
 
 
 
