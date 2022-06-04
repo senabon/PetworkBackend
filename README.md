@@ -11,7 +11,8 @@ Live version deployed to heroku at:
 Express.js, Node.js, MongoDB, Mongoose, The Dog API
 
 ### Links to Frontend Materials
-*Coming Soon*
+Frontend GitHub: https://github.com/senabon/petworkfrontend
+Frontend Live Application: https://629ab49c6e0c1b12c11c14b2--cheery-salmiakki-f8289b.netlify.app/
 
 ### Key Features
 - An API that sends JSON data of users, dog breed information, and favorites to the front end
