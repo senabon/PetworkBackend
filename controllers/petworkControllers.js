@@ -1,22 +1,22 @@
 require('dotenv').config()
 const axios = require('axios');
 const express = require('express');
-const { append } = require('express/lib/response');
+const jwt = require('jsonwebtoken')
 const Profile = require('../Models/profileSchema')
 const router = express.Router()
-
-//for auth
-const usersData = {
-  users: require('../db/seedData.json'),
-  setUsers: function (data) {this.users = data}
-}
-
-const fsPromises = require('fs').promises;
 
 const path = require('path')
 const bcrypt = require('bcrypt')
 
 let APIkey = process.env.PETWORK_APP_DOG_KEY
+
+const favorites =[]
+
+const generateToken = (id) => {
+  return jwt.sign({id}, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  })
+}
 
 const fetchDogFacts = () => {
 
@@ -32,7 +32,7 @@ const fetchDogFacts = () => {
 
 //CORS route
 router.get("/", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Origin", "")
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Max-Age", "1800");
   res.setHeader("Access-Control-Allow-Headers", "content-type");
@@ -54,94 +54,103 @@ router.get('/dogfacts/:id', async (req, res) => {
   let result = data.data.filter(dog => {
     return dog.id == req.params.id
   })
-  res.send({result, likeStatus: usersData.users[0].favorites.includes(req.params.id)})
+  res.send({result, likeStatus: favorites.includes(req.params.id)})
 })
 
 //Get favorited breeds
 router.get('/favorites', async (req, res) => {
-  const favorites = usersData.users[0].favorites
   res.send({favorites})
 })
 
-//Get user profile
-router.get('/profile/:id', async(req, res) => {
-  try {
-    let profileFound = await Profile.find({username: req.params.id})
-    res.json(profileFound)
-  } catch(error) {
-    res.status(400).json(error);
-  }
-})
-
-//update profile
-router.put('/profile/:id', async (req,res)=>{
-  try{
-    let updateProfile = await Profile.findOneAndUpdate({username: req.params.id}, req.body)
-    res.json(updateProfile)
-  } catch(error){
-    res.status(400).json(error)
-  }
+//Get profile
+router.get('/profile/:id', (req, res) => {
+  Profile.findOne({username: req.params.id})
+  .then((result) => res.send(result))
 })
 
 //update favorite status
 router.post('/dogfacts/:id', (req, res) => {
   const id=req.params.id
-  if(!usersData.users[0].favorites.includes(id)){
-    usersData.users[0].favorites.push(req.params.id)
+  if (!favorites.includes(id)){
+    favorites.push(req.params.id)
     res.json({likeStatus: true})
   } else {
-    usersData.users[0].favorites.splice(usersData.users[0].favorites.indexOf(id), 1)
+    favorites.splice(favorites.indexOf(id), 1)
     res.json({likeStatus: false})
   }
 })
 
-//for signup 
 
-const handleNew = async (req,res)=>{
-  const {user, password} =req.body;
-  if (!user||!password)
-    return res.status.json({'message': 'Username and Password Required'});
-  const alreadyTaken = usersData.users.find( dog => dog.username===user)
-  if(alreadyTaken) return res.sendStatus(409);
-  try{
-    const hashedPassword = await bcrypt.hash(password, 10)//salt rounds ---->encryption
-    const newUser = {"username": user, "password": hashedPassword}
-    usersData.setUsers([...usersData.users, newUser])
-    await fsPromises.writeFile(
-      path.join(__dirname, '..', 'db',"seedData.json"),
-      JSON.stringify(usersData.users)
-    );
-    console.log (usersData.users)
-    res.status.json({'succes':`User ${user} has been created!` })
-  }catch(error){
-    res.status.json({'mesage': error.message})
+const registerUser = async (req, res) => {
+  const {username, password, dogName, dogBreed, dogBirthday, favoriteToy, dogDescription} = req.body;
+
+  const userExists = await Profile.findOne({ username })
+
+  if (userExists){
+    res.status(400)
+    throw new Error("User Already Exists");
+  }
+
+  const user = await Profile.create({
+    username,
+    password,
+    dogName,
+    dogBreed,
+    dogBirthday, 
+    favoriteToy, 
+    dogDescription,
+    favorites,
+  })
+
+  if(user){
+    res.status(201).json({
+      _id: user._id,
+      username: user.username,
+      dogName: user.dogName,
+      dogBreed: user.dogBreed,
+      dogBirthday: user.dogBirthday,
+      favoriteToy: user.favoriteToy,
+      dogDescription: user.dogDescription,
+      favorites: user.favorites,
+      token: generateToken(user._id)
+    })
+  } else {
+    res.status(400);
+    throw new Error("Error Occured")
+  }
+  res.json({
+    username,
+  })
+}
+
+router.post('/profile', registerUser);
+
+
+const authUser = async (req, res) => {
+  const {username, password} = req.body;
+
+  const user = await Profile.findOne({username})
+
+  if(user && (await user.matchPassword(password))){
+    res.send({
+      _id: user._id,
+      username: user.username,
+      dogName: user.dogName,
+      dogBreed: user.dogBreed,
+      dogBirthday: user.dogBirthday,
+      favoriteToy: user.favoriteToy,
+      dogDescription: user.dogDescription,
+      token: generateToken(user._id)
+    }) 
+  } else {
+    res.status(400);
+    throw new Error("Invalid User or Password")
   }
 }
 
-router.post('/profile/', handleNew)
+router.post('/profile/:id', authUser);
 
 
-//for signin
-
-const handleSignin = async (req, res)=>{
-  const {user, password} =req.body;
-if (!user||!password){
-  return res.json({'message': 'Username and Password Required'});
-}
-  const userFound = usersData.users.find(dog =>dog.username ===user)
-
-  if(!userFound){ return res.sendStatus(401)}
-
-  const matchFound = await bcrypt.compare(password, userFound.password);
-  
-  if (matchFound){
-    res.json({'success':`User ${user} is now logged in`})
-  } else{
-    res.sendStatus(401);
-  }
-}
-
-router.post('/profile/:id', handleSignin)
 
 
 
