@@ -117,9 +117,6 @@ const registerUser = async (req, res) => {
     res.status(400);
     throw new Error("Error Occured")
   }
-  res.json({
-    username,
-  })
   return
 }
 
