@@ -32,14 +32,14 @@ const fetchDogFacts = () => {
 
 //CORS route
 router.get("/", (req, res) => {
-  res.send("Welcome to Petwork!")
+  return res.send("Welcome to Petwork!")
    });
 
 
 //Get list of all dog facts
 router.get('/dogfacts', async (req, res) => {
   const data = await fetchDogFacts();
-  res.send({results: data.data})
+ return res.send({results: data.data})
 })
 
 //Get information about an individal breed
@@ -49,12 +49,12 @@ router.get('/dogfacts/:id', async (req, res) => {
   let result = data.data.filter(dog => {
     return dog.id == req.params.id
   })
-  res.send({result, likeStatus: favorites.includes(req.params.id)})
+  return res.send({result, likeStatus: favorites.includes(req.params.id)})
 })
 
 //Get favorited breeds
 router.get('/favorites', async (req, res) => {
-  res.send({favorites})
+  return res.send({favorites})
 })
 
 //Get profile
@@ -112,6 +112,7 @@ const registerUser = async (req, res) => {
       favorites: user.favorites,
       token: generateToken(user._id)
     })
+
   } else {
     res.status(400);
     throw new Error("Error Occured")
@@ -119,6 +120,7 @@ const registerUser = async (req, res) => {
   res.json({
     username,
   })
+  return
 }
 
 router.post('/profile', registerUser);
@@ -144,6 +146,7 @@ const authUser = async (req, res) => {
     res.status(400);
     throw new Error("Invalid User or Password")
   }
+  return;
 }
 
 router.post('/profile/:id', authUser);
@@ -158,6 +161,7 @@ router.delete('/:id', (req, res) => {
   )
   .then( () => res.redirect('/'))
   .catch(err => res.send(err))
+  return;
 })
 
 
