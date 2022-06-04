@@ -61,6 +61,7 @@ router.get('/favorites', async (req, res) => {
 router.get('/profile/:id', (req, res) => {
   Profile.findOne({username: req.params.id})
   .then((result) => res.send(result))
+  return;
 })
 
 //update favorite status
@@ -69,9 +70,11 @@ router.post('/dogfacts/:id', (req, res) => {
   if (!favorites.includes(id)){
     favorites.push(req.params.id)
     res.json({likeStatus: true})
+    return;
   } else {
     favorites.splice(favorites.indexOf(id), 1)
     res.json({likeStatus: false})
+    return;
   }
 })
 
